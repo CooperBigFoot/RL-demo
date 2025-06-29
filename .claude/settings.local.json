@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(gh pr view:*)",
+      "Bash(uv run pytest:*)",
+      "Bash(uv sync:*)",
+      "Bash(uv pip install:*)",
+      "Bash(python:*)",
+      "Bash(PYTHONPATH=src uv run pytest tests/ -v)",
+      "Bash(uv run ruff check:*)",
+      "Bash(uv run ruff format:*)",
+      "Bash(git pull:*)",
+      "Bash(uv pip show:*)",
+      "Bash(jupyter:*)",
+      "Bash(uv run:*)",
+      "Bash(gemini:*)",
+      "Bash(git init:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote add:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(uv add:*)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "Bash(gh issue create:*)",
+      "WebFetch(domain:docs.pytorch.org)",
+      "Bash(PYTHONPATH=/Users/cooper/Desktop/RL-demo/src:$PYTHONPATH uv run python examples/test_environment.py)",
+      "Bash(find:*)"
+    ],
+    "deny": []
+  }
+}
