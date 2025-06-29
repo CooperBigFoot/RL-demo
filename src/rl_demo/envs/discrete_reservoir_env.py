@@ -155,7 +155,7 @@ class DiscreteReservoirEnv(EnvBase):
         reward = self._calculate_reward(
             release=info["actual_release"],
             new_volume=new_state["volume"],
-            old_volume=new_state["volume"] + info["actual_release"] - inflow,
+            old_volume=info["old_volume"],
         )
 
         # Get new observation
@@ -200,25 +200,20 @@ class DiscreteReservoirEnv(EnvBase):
         Returns:
             13-dimensional observation tensor
         """
-        # Volume percentage
-        v_pct = state["volume_pct"]
-
         # Cyclical time encoding
         day_of_year = state["day_of_year"]
-        theta = 2 * torch.pi * day_of_year / 365
-        sin_t = torch.sin(torch.tensor(theta))
-        cos_t = torch.cos(torch.tensor(theta))
+        theta = torch.tensor(2 * torch.pi * day_of_year / 365, dtype=torch.float32)
 
-        # Get 10-day inflow forecast
+        # Get forecast and normalize
         forecast = self.simulator.get_forecast(days_ahead=10)
-        normalized_forecast = forecast / self.max_historical_inflow
+        normalized_forecast = torch.tensor(forecast / self.max_historical_inflow, dtype=torch.float32)
 
-        # Combine into observation
-        observation = torch.tensor(
-            [v_pct, sin_t.item(), cos_t.item()] + list(normalized_forecast),
-            dtype=torch.float32,
-            device=self.device,
-        )
+        # Combine into a single tensor
+        observation = torch.cat([
+            torch.tensor([state["volume_pct"]], dtype=torch.float32),
+            torch.stack([torch.sin(theta), torch.cos(theta)]),
+            normalized_forecast
+        ]).to(self.device)
 
         return observation
 
@@ -251,19 +246,29 @@ class DiscreteReservoirEnv(EnvBase):
         Returns:
             Scalar reward value
         """
-        # Hydropower reward (proportional to head * flow)
-        # Use average volume as proxy for head
+        # --- Normalized Hydropower Reward ---
+        # Max possible hydro reward: (10% of v_max release) * (head is 100% of v_max)
+        max_hydro_reward = (0.10 * self.v_max) * 1.0
         avg_volume = (old_volume + new_volume) / 2
-        r_hydro = release * (avg_volume / self.v_max)
+        r_hydro = (release * (avg_volume / self.v_max)) / max_hydro_reward
 
-        # Flood penalty
-        p_flood = -1.0 * (new_volume - self.v_safe) if new_volume > self.v_safe else 0.0
+        # --- Normalized Flood Penalty ---
+        p_flood = 0.0
+        if new_volume > self.v_safe:
+            violation_depth = new_volume - self.v_safe
+            # Max possible violation is from v_safe up to v_max
+            max_possible_violation = self.v_max - self.v_safe
+            p_flood = -1.0 * (violation_depth / max_possible_violation)
 
-        # Environmental flow penalty
-        min_env_flow = 0.01 * self.v_max  # 1% minimum flow
-        p_env = -1.0 * (min_env_flow - release) if release < min_env_flow else 0.0
+        # --- Normalized Environmental Flow Penalty ---
+        min_env_flow = 0.01 * self.v_max
+        p_env = 0.0
+        if release < min_env_flow:
+            # Penalty is proportional to the deficit, from 0 to -1
+            p_env = -1.0 * ((min_env_flow - release) / min_env_flow)
 
-        # Total reward
+        # With normalized components, weights are easier to interpret and tune
+        # You might start with all weights at 1.0 and adjust from there.
         reward = self.w_hydro * r_hydro + self.w_flood * p_flood + self.w_env * p_env
 
         return reward

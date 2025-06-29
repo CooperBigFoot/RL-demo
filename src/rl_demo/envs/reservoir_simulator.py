@@ -87,6 +87,9 @@ class ReservoirSimulator:
             - done: Whether episode should terminate
             - info: Additional diagnostic information
         """
+        # Store old volume before modification
+        old_volume = self.current_volume
+
         # Generate inflow for current timestep
         inflow = self._generate_inflow()
         self.inflow_history.append(inflow)
@@ -111,6 +114,7 @@ class ReservoirSimulator:
             "requested_release": release_amount,
             "actual_release": safe_release,
             "constraint_violated": abs(release_amount - safe_release) > 1e-6,
+            "old_volume": old_volume,
         }
 
         return self.get_state(), inflow, done, info
