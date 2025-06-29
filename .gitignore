@@ -1,10 +1,56 @@
 # Python-generated files
 __pycache__/
 *.py[oc]
+*.py[cod]
+*$py.class
 build/
 dist/
 wheels/
 *.egg-info
+.installed.cfg
+*.egg
 
 # Virtual environments
 .venv
+env/
+venv/
+ENV/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# TensorBoard logs
+runs/
+tb_logs/
+logs/
+
+# Model checkpoints
+checkpoints/
+*.ckpt
+*.pth
+
+# Data files
+data/
+*.csv
+*.h5
+*.pkl
+
+# macOS
+.DS_Store
+
+# uv
+.uv/
+
+# Jupyter
+.ipynb_checkpoints
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
