@@ -44,9 +44,6 @@ class TestDiscreteReservoirEnv:
 
         # Test that actions respect constraints
         for action_idx in range(11):
-            # Get initial state
-            initial_volume = env.simulator.current_volume
-
             # Take action
             td = TensorDict({"action": torch.tensor(action_idx)}, batch_size=())
             td = env.step(td)
@@ -78,7 +75,7 @@ class TestDiscreteReservoirEnv:
     def test_torchrl_specs(self, env):
         """Test TorchRL spec definitions."""
         # Check observation spec (CompositeSpec with "observation" key)
-        assert "observation" in env.observation_spec.keys()
+        assert "observation" in env.observation_spec
         assert env.observation_spec["observation"].shape == torch.Size([13])
         assert env.observation_spec["observation"].dtype == torch.float32
 

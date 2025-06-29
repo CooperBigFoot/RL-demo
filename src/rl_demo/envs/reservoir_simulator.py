@@ -97,17 +97,21 @@ class ReservoirSimulator:
         # Apply safety constraints to release
         safe_release = self._apply_release_constraints(release_amount)
 
-        # Update water balance
-        self.current_volume = self.current_volume + inflow - safe_release
+        # Calculate the potential new volume
+        potential_new_volume = self.current_volume + inflow - safe_release
 
-        # Enforce capacity limits
-        self.current_volume = np.clip(self.current_volume, 0, self.v_max)
+        # Check for terminal conditions based on the potential new state
+        done = False
+        if potential_new_volume > self.v_max or potential_new_volume <= self.v_dead:  # Catastrophic Flood
+            done = True
 
-        # Check termination conditions
-        done = self._check_termination()
+        # NOW, enforce the physical capacity limits on the state
+        self.current_volume = np.clip(potential_new_volume, self.v_dead, self.v_max)
 
-        # Increment timestep
+        # Increment step and check for end of episode
         self.current_step += 1
+        if self.current_step >= 365:
+            done = True
 
         # Collect info
         info = {
@@ -197,25 +201,6 @@ class ReservoirSimulator:
         safe_release = max(0, safe_release)
 
         return safe_release
-
-    def _check_termination(self) -> bool:
-        """Check if simulation should terminate.
-
-        Termination conditions:
-        1. Catastrophic flood (volume > v_max)
-        2. Critical drought (volume < v_dead)
-        3. Reached 365 days (full year)
-
-        Returns:
-            True if any termination condition is met
-        """
-        # Note: Volume is already clipped to [0, v_max] so flood won't occur
-        # But we check if it would have exceeded without clipping
-        if self.current_volume <= self.v_dead:
-            return True
-
-        # Check if we've completed 365 steps (after incrementing in step())
-        return self.current_step >= 364
 
     def get_forecast(self, days_ahead: int = 10) -> np.ndarray:
         """Generate inflow forecast with increasing uncertainty.
