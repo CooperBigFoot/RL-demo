@@ -167,6 +167,7 @@ class DiscreteReservoirEnv(EnvBase):
                 "observation": observation,
                 "reward": torch.tensor([reward], dtype=torch.float32, device=self.device),
                 "done": torch.tensor([done], dtype=torch.bool, device=self.device),
+                "info": {"inflow": inflow, "actual_release": info["actual_release"]},
             },
             batch_size=self.batch_size,
             device=self.device,
@@ -272,3 +273,24 @@ class DiscreteReservoirEnv(EnvBase):
         reward = self.w_hydro * r_hydro + self.w_flood * p_flood + self.w_env * p_env
 
         return reward
+
+    @staticmethod
+    def parse_observation(obs: torch.Tensor) -> dict:
+        """Parse observation tensor into named components.
+        
+        Args:
+            obs: 13-dimensional observation tensor
+            
+        Returns:
+            Dictionary with named components:
+            - volume_pct: Current volume as fraction of max capacity
+            - sin_t: Sine of seasonal time
+            - cos_t: Cosine of seasonal time  
+            - forecast: 10-day inflow forecast (normalized)
+        """
+        return {
+            "volume_pct": obs[0].item(),
+            "sin_t": obs[1].item(),
+            "cos_t": obs[2].item(),
+            "forecast": obs[3:13]
+        }
