@@ -1,0 +1,60 @@
+# Deep network configuration - larger capacity for complex patterns
+
+environment:
+  name: DiscreteReservoir
+  inflow_scenario: extreme  # Most challenging scenario
+  v_max: 1000.0
+  v_min: 100.0
+  device: cuda  # GPU recommended for larger network
+
+network:
+  hidden_dim: 512  # Wider layers
+  n_layers: 4      # Deeper network
+  activation: relu
+  state_dim: 13
+  action_dim: 11
+
+training:
+  total_frames: 100000  # Longer training for deeper network
+  frames_per_batch: 256
+  batch_size: 64
+  learning_rate: 0.0005  # Lower LR for stability
+  
+  # DQN specific
+  gamma: 0.99
+  epsilon_start: 1.0
+  epsilon_end: 0.01
+  epsilon_frames: 20000  # Slower exploration decay
+  target_update_freq: 1000  # Less frequent updates for stability
+  
+  # Replay buffer
+  buffer_size: 20000  # Larger buffer
+  min_replay_size: 2000
+  
+  # Optimization
+  optimizer: adam
+  grad_clip: 0.5  # Gradient clipping
+  weight_decay: 0.0001  # Small weight decay
+
+logging:
+  log_interval: 100
+  eval_interval: 2000
+  eval_episodes: 10  # More thorough evaluation
+  checkpoint_interval: 10000
+  
+  log_dir: runs/dqn_reservoir_deep
+  checkpoint_dir: checkpoints/deep
+  
+  save_best: true
+  log_gradients: true
+  log_actions: true
+  log_q_values: true
+
+experiment:
+  exp_name: dqn_reservoir_deep_network
+  seed: 42
+  notes: "Deep network configuration for handling complex inflow patterns"
+  tags:
+    - deep
+    - large-capacity
+    - extreme-scenario
