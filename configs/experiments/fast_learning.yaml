@@ -1,0 +1,60 @@
+# Fast learning configuration - higher learning rate and exploration
+
+environment:
+  name: DiscreteReservoir
+  inflow_scenario: stable  # Easier scenario for faster convergence
+  v_max: 1000.0
+  v_min: 100.0
+  device: cpu
+
+network:
+  hidden_dim: 128  # Smaller network for faster training
+  n_layers: 2
+  activation: relu
+  state_dim: 13
+  action_dim: 11
+
+training:
+  total_frames: 25000  # Shorter training
+  frames_per_batch: 512  # Larger batches
+  batch_size: 64
+  learning_rate: 0.005  # Higher learning rate
+  
+  # DQN specific
+  gamma: 0.95  # Lower discount for faster learning
+  epsilon_start: 1.0
+  epsilon_end: 0.05  # Higher final exploration
+  epsilon_frames: 5000  # Faster decay
+  target_update_freq: 250  # More frequent updates
+  
+  # Replay buffer
+  buffer_size: 5000
+  min_replay_size: 500
+  
+  # Optimization
+  optimizer: adam
+  grad_clip: 1.0  # Gradient clipping for stability
+  weight_decay: 0.0
+
+logging:
+  log_interval: 50
+  eval_interval: 500
+  eval_episodes: 3
+  checkpoint_interval: 2500
+  
+  log_dir: runs/dqn_reservoir_fast
+  checkpoint_dir: checkpoints/fast
+  
+  save_best: true
+  log_gradients: true  # Monitor gradients
+  log_actions: true
+  log_q_values: true
+
+experiment:
+  exp_name: dqn_reservoir_fast_learning
+  seed: 42
+  notes: "Fast learning configuration with higher LR and exploration"
+  tags:
+    - fast
+    - high-lr
+    - experimental

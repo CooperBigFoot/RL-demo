@@ -1,0 +1,65 @@
+# Baseline DQN configuration for Discrete Reservoir Environment
+# This configuration provides a standard baseline for comparison
+
+environment:
+  name: DiscreteReservoir
+  inflow_scenario: mixed  # Options: stable, seasonal, extreme, mixed
+  v_max: 1000.0
+  v_min: 100.0
+  device: cpu  # Change to cuda if GPU available
+
+network:
+  hidden_dim: 256
+  n_layers: 2
+  activation: relu
+  state_dim: 13  # Observation dimension for reservoir env
+  action_dim: 11  # 11 discrete actions (0-10% release)
+
+training:
+  # Basic training
+  total_frames: 50000
+  frames_per_batch: 256
+  batch_size: 32
+  learning_rate: 0.001
+  
+  # DQN specific
+  gamma: 0.99
+  epsilon_start: 1.0
+  epsilon_end: 0.01
+  epsilon_frames: 10000
+  target_update_freq: 500
+  
+  # Replay buffer
+  buffer_size: 10000
+  min_replay_size: 1000
+  
+  # Optimization
+  optimizer: adam
+  grad_clip: null
+  weight_decay: 0.0
+
+logging:
+  log_interval: 100
+  eval_interval: 1000
+  eval_episodes: 5
+  checkpoint_interval: 5000
+  
+  # Directories
+  log_dir: runs/dqn_reservoir_baseline
+  checkpoint_dir: checkpoints/baseline
+  
+  # Options
+  save_best: true
+  log_gradients: false
+  log_actions: true
+  log_q_values: true
+
+experiment:
+  exp_name: dqn_reservoir_baseline
+  seed: 42
+  resume: null
+  notes: "Baseline DQN configuration for reservoir control"
+  tags:
+    - baseline
+    - dqn
+    - reservoir
