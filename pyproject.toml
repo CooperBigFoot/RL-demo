@@ -15,6 +15,7 @@ dependencies = [
     "tensordict>=0.8.3",
     "torch>=2.7.1",
     "torchrl>=0.8.1",
+    "tqdm>=4.67.1",
 ]
 
 [build-system]
