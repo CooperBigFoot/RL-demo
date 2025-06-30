@@ -10,7 +10,7 @@ class DiscreteReservoirEnv(EnvBase):
     """TorchRL wrapper for discrete-action reservoir control.
 
     This environment wraps the core ReservoirSimulator to provide:
-    - Discrete action space (11 actions: 0%, 1%, ..., 10% release)
+    - Discrete action space (11 actions: 0%, 10%, 20%, ..., 100% release)
     - TensorDict-based state representation (13 dimensions)
     - Reward function balancing hydropower, flood control, and environmental flow
     - TorchRL-compatible specs and interfaces
@@ -53,9 +53,9 @@ class DiscreteReservoirEnv(EnvBase):
         self.v_dead = v_dead
         self.v_safe = 0.85 * v_max  # 85% for flood safety
 
-        # Discrete action space: 11 actions (0%, 1%, ..., 10%)
+        # Discrete action space: 11 actions (0%, 10%, 20%, ..., 100%)
         self.n_actions = 11
-        self.action_percentages = torch.linspace(0, 0.10, self.n_actions)
+        self.action_percentages = torch.linspace(0, 1.0, self.n_actions)
 
         # For state normalization
         self.max_historical_inflow = 0.2 * v_max  # Estimate based on simulator params
@@ -82,7 +82,7 @@ class DiscreteReservoirEnv(EnvBase):
             shape=self.batch_size,  # Batch size for the composite spec
         )
 
-        # Action spec: Categorical with 11 discrete actions
+        # Action spec: Categorical with 11 discrete actions (0%, 10%, ..., 100%)
         self.action_spec = Categorical(
             n=self.n_actions,
             shape=(),  # Scalar action
@@ -222,7 +222,7 @@ class DiscreteReservoirEnv(EnvBase):
         """Convert discrete action index to release amount.
 
         Args:
-            action_idx: Discrete action in {0, 1, 2, ..., 10}
+            action_idx: Discrete action in {0, 1, 2, ..., 10} representing 0%, 10%, ..., 100%
 
         Returns:
             Actual release amount in m³
@@ -248,8 +248,8 @@ class DiscreteReservoirEnv(EnvBase):
             Scalar reward value
         """
         # --- Normalized Hydropower Reward ---
-        # Max possible hydro reward: (10% of v_max release) * (head is 100% of v_max)
-        max_hydro_reward = (0.10 * self.v_max) * 1.0
+        # Max possible hydro reward: (100% of v_max release) * (head is 100% of v_max)
+        max_hydro_reward = (1.0 * self.v_max) * 1.0
         avg_volume = (old_volume + new_volume) / 2
         r_hydro = (release * (avg_volume / self.v_max)) / max_hydro_reward
 

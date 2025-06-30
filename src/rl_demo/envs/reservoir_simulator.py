@@ -179,7 +179,7 @@ class ReservoirSimulator:
 
         Constraints:
         1. Cannot release more than available above dead storage
-        2. Cannot release more than 10% of current volume per day
+        2. Cannot release more than 100% of current volume per day
         3. Release must be non-negative
 
         Args:
@@ -191,8 +191,8 @@ class ReservoirSimulator:
         # Available water above dead storage
         available = max(0, self.current_volume - self.v_dead)
 
-        # Daily release limit (10% of current volume)
-        daily_limit = 0.10 * self.current_volume
+        # Daily release limit (100% of current volume)
+        daily_limit = 1.0 * self.current_volume
 
         # Apply all constraints
         safe_release = min(requested_release, available, daily_limit)

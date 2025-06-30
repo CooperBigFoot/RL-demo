@@ -56,11 +56,11 @@ class RandomPolicy(BaselinePolicy):
 
 
 class ConservativePolicy(BaselinePolicy):
-    """Conservative policy - always release minimum (1%)."""
+    """Conservative policy - always release minimum (10%)."""
     
     def get_action(self, obs: TensorDict) -> torch.Tensor:
         batch_size = obs["observation"].shape[0] if obs["observation"].dim() > 1 else 1
-        # Action 1 corresponds to 1% release
+        # Action 1 corresponds to 10% release
         return torch.ones(batch_size, dtype=torch.long, device=obs.device)
     
     @property
@@ -75,8 +75,8 @@ class AggressivePolicy(BaselinePolicy):
         # Extract current demand from observation (index 3)
         demand = obs["observation"][..., 3]
         
-        # Scale demand to action space (0-10%)
-        # Assume max demand corresponds to ~5% release for safety
+        # Scale demand to action space (0-100%)
+        # Assume max demand corresponds to ~50% release for safety
         action = torch.clamp((demand * 5).long(), 0, self.action_dim - 1)
         
         if action.dim() == 0:
@@ -199,7 +199,7 @@ def evaluate_policy(
                 episode_droughts += 1
             
             # Estimate hydropower (proportional to release and head)
-            release_fraction = action.item() / 10.0  # Convert to percentage
+            release_fraction = action.item() * 0.1  # Convert to percentage (0%, 10%, 20%, ..., 100%)
             hydropower = release_fraction * storage_level  # Simplified
             episode_hydropower.append(hydropower)
             
@@ -289,7 +289,7 @@ def plot_evaluation_results(results: Dict[str, Dict], output_dir: Path):
         ax.set_ylabel("Frequency")
         ax.set_title(f"{policy_name} Action Distribution")
         ax.set_xticks(actions)
-        ax.set_xticklabels([f"{i}%" for i in actions])
+        ax.set_xticklabels([f"{i*10}%" for i in actions])
     
     plt.tight_layout()
     plt.savefig(output_dir / "action_distributions.png", dpi=150)

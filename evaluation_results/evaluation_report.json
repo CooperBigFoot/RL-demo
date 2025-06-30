@@ -1,0 +1,146 @@
+{
+  "summary": {
+    "DQN": {
+      "average_reward": 9.158339270161814,
+      "reward_std": 2.003227313139883,
+      "success_rate": 0.0,
+      "flood_rate": 0.0,
+      "drought_rate": 1.0,
+      "hydropower_efficiency": 0.14555412423716832,
+      "environmental_compliance": 1.0,
+      "storage_stability": 0.9910379880721304
+    },
+    "Random": {
+      "average_reward": -167.40542609360185,
+      "reward_std": 33.69818777024288,
+      "success_rate": 0.0,
+      "flood_rate": 0.06,
+      "drought_rate": 0.99,
+      "hydropower_efficiency": 0.13006822281348548,
+      "environmental_compliance": 0.9064517909376897,
+      "storage_stability": 0.9876006033151192
+    },
+    "Conservative": {
+      "average_reward": -36.43093647704925,
+      "reward_std": 10.209155305165025,
+      "success_rate": 0.0,
+      "flood_rate": 1.0,
+      "drought_rate": 0.0,
+      "hydropower_efficiency": 0.08120146030279576,
+      "environmental_compliance": 1.0,
+      "storage_stability": 0.9809140173116824
+    },
+    "Aggressive": {
+      "average_reward": -115.05810639684904,
+      "reward_std": 36.70248366089726,
+      "success_rate": 0.52,
+      "flood_rate": 0.48,
+      "drought_rate": 0.0,
+      "hydropower_efficiency": 0.1206651623135164,
+      "environmental_compliance": 0.9356898987520603,
+      "storage_stability": 0.9917170085042839
+    }
+  },
+  "detailed_metrics": {
+    "DQN": {
+      "avg_episode_reward": 9.158339270161814,
+      "std_episode_reward": 2.003227313139883,
+      "avg_episode_length": 365.0,
+      "success_rate": 0.0,
+      "flood_rate": 0.0,
+      "drought_rate": 1.0,
+      "avg_storage_level": 0.27688477634648756,
+      "storage_variance": 0.009043055902734316,
+      "avg_hydropower": 0.14555412423716832,
+      "env_compliance_rate": 1.0,
+      "action_distribution": [
+        0.0,
+        0.10071232876712329,
+        0.11665753424657534,
+        0.04515068493150685,
+        0.08282191780821918,
+        0.03523287671232877,
+        0.0,
+        0.1543013698630137,
+        0.4550684931506849,
+        0.0,
+        0.010054794520547946
+      ]
+    },
+    "Random": {
+      "avg_episode_reward": -167.40542609360185,
+      "std_episode_reward": 33.69818777024288,
+      "avg_episode_length": 362.38,
+      "success_rate": 0.0,
+      "flood_rate": 0.06,
+      "drought_rate": 0.99,
+      "avg_storage_level": 0.30157258001302795,
+      "storage_variance": 0.012555072003053743,
+      "avg_hydropower": 0.13006822281348548,
+      "env_compliance_rate": 0.9064517909376897,
+      "action_distribution": [
+        0.09354820906231028,
+        0.08841547546774105,
+        0.09125779568408852,
+        0.08841547546774105,
+        0.09365859042993542,
+        0.09484519013190573,
+        0.09285832551465313,
+        0.0908990562393068,
+        0.08844307080964733,
+        0.08813952204867818,
+        0.0895192891439925
+      ]
+    },
+    "Conservative": {
+      "avg_episode_reward": -36.43093647704925,
+      "std_episode_reward": 10.209155305165025,
+      "avg_episode_length": 13.61,
+      "success_rate": 0.0,
+      "flood_rate": 1.0,
+      "drought_rate": 0.0,
+      "avg_storage_level": 0.8120146030279576,
+      "storage_variance": 0.01945734524278198,
+      "avg_hydropower": 0.08120146030279576,
+      "env_compliance_rate": 1.0,
+      "action_distribution": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "Aggressive": {
+      "avg_episode_reward": -115.05810639684904,
+      "std_episode_reward": 36.70248366089726,
+      "avg_episode_length": 339.76,
+      "success_rate": 0.52,
+      "flood_rate": 0.48,
+      "drought_rate": 0.0,
+      "avg_storage_level": 0.6190106047522203,
+      "storage_variance": 0.00835217246924969,
+      "avg_hydropower": 0.1206651623135164,
+      "env_compliance_rate": 0.9356898987520603,
+      "action_distribution": [
+        0.06431010124793972,
+        0.2617730162467624,
+        0.29656227925594536,
+        0.3037438191664705,
+        0.07269837532375795,
+        0.0009124087591240876,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  }
+}
