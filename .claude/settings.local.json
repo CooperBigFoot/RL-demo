@@ -29,7 +29,14 @@
       "WebFetch(domain:docs.pytorch.org)",
       "Bash(PYTHONPATH=/Users/cooper/Desktop/RL-demo/src:$PYTHONPATH uv run python examples/test_environment.py)",
       "Bash(find:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(ls:*)",
+      "Bash(uv pip:*)",
+      "Bash(sudo rm:*)",
+      "Bash(chmod:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(PYTHONPATH=/Users/cooper/Desktop/RL-demo/src:$PYTHONPATH uv run python test_fix.py)"
     ],
     "deny": []
   }
